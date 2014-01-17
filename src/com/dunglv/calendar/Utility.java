@@ -7,6 +7,7 @@ import java.util.Calendar;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 public class Utility {
 	public static ArrayList<String> nameOfEvent = new ArrayList<String>();
@@ -30,14 +31,16 @@ public class Utility {
 		endDates.clear();
 		descriptions.clear();
 		for (int i = 0; i < CNames.length; i++) {
-
-			nameOfEvent.add(cursor.getString(1));
-			startDates.add(getDate(Long.parseLong(cursor.getString(3))));
-			endDates.add(getDate(Long.parseLong(cursor.getString(4))));
-			descriptions.add(cursor.getString(2));
-			CNames[i] = cursor.getString(1);
-			cursor.moveToNext();
-
+			try {
+				nameOfEvent.add(cursor.getString(1));
+				startDates.add(getDate(Long.parseLong(cursor.getString(3))));
+				endDates.add(getDate(Long.parseLong(cursor.getString(4))));
+				descriptions.add(cursor.getString(2));
+				CNames[i] = cursor.getString(1);
+				cursor.moveToNext();
+			} catch (Exception e) {
+				Log.e("i", i+"");
+			}
 		}
 		return nameOfEvent;
 	}
