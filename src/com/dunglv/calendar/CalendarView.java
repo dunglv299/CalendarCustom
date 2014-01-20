@@ -1,15 +1,23 @@
 package com.dunglv.calendar;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -194,4 +202,83 @@ public class CalendarView extends Activity {
 			adapter.notifyDataSetChanged();
 		}
 	};
+	private Uri eventsUri;
+	Cursor cursor;
+	int calendarId;
+
+	public void testAddEvent(View v) {
+
+		if (android.os.Build.VERSION.SDK_INT <= 7) {
+			eventsUri = Uri.parse("content://calendar/events");
+			cursor = this.getContentResolver().query(
+					Uri.parse("content://calendar/calendars"),
+					new String[] { "_id", "displayName" }, null, null, null);
+
+		}
+
+		else if (android.os.Build.VERSION.SDK_INT <= 14) {
+			eventsUri = Uri.parse("content://com.android.calendar/events");
+			cursor = this.getContentResolver().query(
+					Uri.parse("content://com.android.calendar/calendars"),
+					new String[] { "_id", "displayName" }, null, null, null);
+
+		}
+
+		else {
+			eventsUri = Uri.parse("content://com.android.calendar/events");
+			cursor = this.getContentResolver().query(
+					Uri.parse("content://com.android.calendar/calendars"),
+					new String[] { "_id", "calendar_displayName" }, null, null,
+					null);
+
+		}
+
+		if (cursor.moveToFirst()) {
+			do {
+				int calId = cursor.getInt(0);
+				String calName = cursor.getString(1);
+				if (calName.contains("@gmail.com")) {
+					calendarId = calId;
+					break;
+				}
+				// do what ever you want here
+			} while (cursor.moveToNext());
+		}
+		long startCalTime;
+		long endCalTime;
+		Date eventDate = null;
+		TimeZone timeZone = TimeZone.getDefault();
+		Calendar cal = Calendar.getInstance();
+
+		try {
+			eventDate = new SimpleDateFormat("MM/dd/yyyy").parse("01/19/2014");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cal.setTime(eventDate);
+
+		cal.set(Calendar.HOUR_OF_DAY, 13);
+		cal.set(Calendar.MINUTE, 13);
+		startCalTime = cal.getTimeInMillis();
+
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 14);
+		endCalTime = cal.getTimeInMillis();
+
+		ContentValues event = new ContentValues();
+
+		event.put(CalendarContract.Events.CALENDAR_ID, calendarId);
+		event.put(CalendarContract.Events.TITLE, "new event");
+		event.put(CalendarContract.Events.DESCRIPTION, "Adding Event");
+		event.put(CalendarContract.Events.EVENT_LOCATION, "dunglv.com");
+		event.put(CalendarContract.Events.DTSTART, startCalTime);
+		event.put(CalendarContract.Events.DTEND, endCalTime);
+		event.put(CalendarContract.Events.STATUS, 1);
+		event.put(CalendarContract.Events.HAS_ALARM, 1);
+		event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+		// To Insert
+		this.getContentResolver().insert(eventsUri, event);
+
+	}
 }

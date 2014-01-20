@@ -39,7 +39,7 @@ public class Utility {
 				CNames[i] = cursor.getString(1);
 				cursor.moveToNext();
 			} catch (Exception e) {
-				Log.e("i", i+"");
+				Log.i("i", i+"");
 			}
 		}
 		return nameOfEvent;

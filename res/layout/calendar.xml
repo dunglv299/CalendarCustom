@@ -49,30 +49,39 @@
     </RelativeLayout>
 
     <GridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridview"
-        android:layout_below="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
         android:layout_gravity="center_horizontal"
         android:listSelector="@android:color/transparent"
         android:numColumns="7"
         android:stretchMode="columnWidth" />
-    
-    <LinearLayout 
+
+    <LinearLayout
         android:id="@+id/text"
-        android:layout_below="@+id/gridview"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gridview"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        	<!-- <TextView 
+        android:orientation="vertical" >
+
+        <!--
+                 <TextView 
         	    android:id="@+id/tvView"
         	    android:layout_width="match_parent"
         	    android:layout_height="wrap_content"
         	    android:visibility="gone"
-        	    android:text=""/> -->
+        	    android:text=""/>
+        -->
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text"
+        android:onClick="testAddEvent"
+        android:text="Add" />
 
 </RelativeLayout>
